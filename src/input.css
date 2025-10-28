@@ -1,0 +1,5 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+
+/* Include the small React-derived utilities to keep visual parity */
+@import "../templates/_react_css.css";
