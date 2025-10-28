@@ -1,0 +1,28 @@
+{% extends 'base.twig' %}
+
+{% block title %}Landing - TicketWave{% endblock %}
+
+{% block content %}
+<section class="flex min-h-[calc(100vh-8rem)] items-center justify-center px-6 py-12">
+  <div class="mx-auto max-w-6xl grid gap-8 lg:grid-cols-2 lg:gap-12">
+    <div class="relative overflow-hidden rounded-[1em] bg-linear-to-br from-[#8176AF] to-[#C0B7E8] p-12 lg:flex lg:flex-col lg:justify-center">
+      <div class="glow-circle absolute -right-20 -top-20 size-64 rounded-full bg-white"></div>
+      <div class="relative z-10">
+        <h1 class="mb-4 text-5xl gradient-text">Supercharge your support</h1>
+        <p class="text-lg text-white/90">Manage tickets, collaborate with your team, and get insights in one place.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="rounded-[1em] border-[#C0B7E8]/10 bg-[#3D3654] p-6 shadow-lg shadow-black/20 sm:p-8">
+        <h2 class="text-3xl mb-4">Get started</h2>
+        <p class="text-[#B1B1B1] mb-6">Create an account or log in to try the demo.</p>
+        <div class="flex gap-4">
+          <a href="/signup" class="gradient-button px-4 py-2 rounded-[1em]">Sign Up</a>
+          <a href="/login" class="px-4 py-2 rounded-[1em] border border-[#C0B7E8]/10">Log In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

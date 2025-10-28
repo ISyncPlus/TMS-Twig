@@ -1,0 +1,50 @@
+{% extends 'base.twig' %}
+
+{% block title %}Sign up - TicketWave{% endblock %}
+
+{% block content %}
+<div class="flex min-h-[calc(100vh-8rem)] items-center justify-center bg-[#302C42] px-6 py-12">
+  <div class="w-full max-w-6xl">
+    <div class="grid gap-8 lg:grid-cols-2 lg:gap-12">
+      <div class="relative hidden overflow-hidden rounded-[1em] bg-linear-to-br from-[#C0B7E8] to-[#8176AF] p-12 lg:flex lg:flex-col lg:justify-center">
+        <div class="glow-circle absolute -left-20 -top-20 size-64 rounded-full bg-white"></div>
+        <div class="relative z-10">
+          <h2 class="mb-4 text-4xl text-white">Join TicketWave Today</h2>
+          <p class="text-lg text-white/90">Create your account and start managing your support tickets with ease.</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="rounded-[1em] border-[#C0B7E8]/10 bg-[#3D3654] p-6 shadow-lg shadow-black/20 sm:p-8">
+          <div class="mb-6 text-center sm:mb-8">
+            <h1 class="gradient-text text-3xl">Create Account</h1>
+            <p class="mt-2 text-[#B1B1B1]">Sign up to start managing your tickets</p>
+          </div>
+
+          <form method="post" action="/signup" novalidate>
+            <div class="space-y-4">
+              <label class="block text-[#E0E0E0]">Full Name</label>
+              <input name="name" type="text" placeholder="John Doe" class="rounded-[1em] border-[#C0B7E8]/10 bg-[#302C42] text-[#E0E0E0] placeholder:text-[#B1B1B1] w-full p-3" />
+
+              <label class="block text-[#E0E0E0]">Email</label>
+              <input name="email" type="email" placeholder="you@example.com" class="rounded-[1em] border-[#C0B7E8]/10 bg-[#302C42] text-[#E0E0E0] placeholder:text-[#B1B1B1] w-full p-3" />
+
+              <label class="block text-[#E0E0E0]">Password</label>
+              <input name="password" type="password" placeholder="At least 6 characters" class="rounded-[1em] border-[#C0B7E8]/10 bg-[#302C42] text-[#E0E0E0] placeholder:text-[#B1B1B1] w-full p-3" />
+
+              <label class="block text-[#E0E0E0]">Confirm Password</label>
+              <input name="confirmPassword" type="password" placeholder="Re-enter your password" class="rounded-[1em] border-[#C0B7E8]/10 bg-[#302C42] text-[#E0E0E0] placeholder:text-[#B1B1B1] w-full p-3" />
+            </div>
+
+            <div class="mt-6">
+              <button type="submit" class="w-full gradient-button rounded-[1em] py-3">Sign Up</button>
+            </div>
+          </form>
+
+          <p class="mt-6 text-center text-[#B1B1B1]">Already have an account? <a href="/login" class="text-[#C0B7E8] hover:underline">Log in</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

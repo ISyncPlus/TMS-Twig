@@ -1,0 +1,16 @@
+{% extends 'base.twig' %}
+
+{% block title %}Dashboard - TicketWave{% endblock %}
+
+{% block content %}
+<section class="px-6 py-12">
+  <div class="mx-auto max-w-6xl">
+    <h1 class="text-3xl mb-6 gradient-text">Dashboard</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="rounded-lg bg-[#3D3654] p-6">Open Tickets: 6</div>
+      <div class="rounded-lg bg-[#3D3654] p-6">In Progress: 4</div>
+      <div class="rounded-lg bg-[#3D3654] p-6">Closed: 4</div>
+    </div>
+  </div>
+</section>
+{% endblock %}

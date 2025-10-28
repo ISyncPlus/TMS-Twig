@@ -1,0 +1,22 @@
+.gradient-text {
+  background: linear-gradient(to right, #c0b7e8, #8176af);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-button {
+  background: linear-gradient(to right, #8176af, #c0b7e8);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.gradient-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(129, 118, 175, 0.3);
+}
+
+.glow-circle {
+  filter: blur(60px);
+  opacity: 0.3;
+}

@@ -1,0 +1,7 @@
+{
+  "name": "isyncplus/tms-twig",
+  "description": "Twig replica of the Ticket Management System UI (static Twig templates + Tailwind CDN).",
+  "require": {
+    "twig/twig": "^3.0"
+  }
+}

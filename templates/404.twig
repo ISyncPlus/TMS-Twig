@@ -1,0 +1,11 @@
+{% extends 'base.twig' %}
+
+{% block title %}Not found{% endblock %}
+
+{% block content %}
+<div class="px-6 py-24 text-center">
+  <h1 class="text-4xl mb-4">404 — Not Found</h1>
+  <p class="text-[#B1B1B1]">No template found for {{ path }}</p>
+  <a href="/" class="mt-6 inline-block gradient-button px-4 py-2 rounded-[1em]">Return Home</a>
+</div>
+{% endblock %}
