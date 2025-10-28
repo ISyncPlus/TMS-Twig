@@ -7,8 +7,17 @@
   <div class="w-full max-w-6xl">
     <div class="grid gap-8 lg:grid-cols-2 lg:gap-12">
       <div class="relative hidden overflow-hidden rounded-[1em] bg-linear-to-br from-[#8176AF] to-[#C0B7E8] p-12 lg:flex lg:flex-col lg:justify-center">
-        <div class="glow-circle absolute -right-20 -top-20 size-64 rounded-full bg-white"></div>
+        <div class="glow-circle pulse absolute -right-20 -top-20 size-64 rounded-full bg-white"></div>
+        <div class="glow-circle pulse absolute -bottom-20 -left-20 size-80 rounded-full bg-white/90"></div>
         <div class="relative z-10">
+          <div class="mb-6">
+            <div class="ticket-badge mb-4">
+              <!-- simple ticket SVG to match the React icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" class="w-8 h-8">
+                <path d="M21 10v4a2 2 0 0 1-2 2h-1a2 2 0 0 0 0 4H6a2 2 0 0 0 0-4H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h1a2 2 0 0 0 0-4h12a2 2 0 0 0 0 4h1a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+          </div>
           <h2 class="mb-4 text-4xl text-white">Welcome Back to TicketWave</h2>
           <p class="text-lg text-white/90">Sign in to access your ticket management dashboard and streamline your support workflow.</p>
         </div>
@@ -25,10 +34,12 @@
           <form method="post" action="/login" novalidate>
             <div class="space-y-4">
               <label class="block text-[#E0E0E0]">Email</label>
-              <input name="email" type="email" placeholder="you@example.com" class="rounded-[1em] border-[#C0B7E8]/10 bg-[#302C42] text-[#E0E0E0] placeholder:text-[#B1B1B1] w-full p-3" />
+              <input id="email" name="email" type="email" placeholder="you@example.com" class="rounded-[1em] border-[#C0B7E8]/10 bg-[#302C42] text-[#E0E0E0] placeholder:text-[#B1B1B1] w-full p-3" />
+              <p id="email-error" class="text-red-400 text-sm hidden" role="alert"></p>
 
               <label class="block text-[#E0E0E0]">Password</label>
-              <input name="password" type="password" placeholder="Enter your password" class="rounded-[1em] border-[#C0B7E8]/10 bg-[#302C42] text-[#E0E0E0] placeholder:text-[#B1B1B1] w-full p-3" />
+              <input id="password" name="password" type="password" placeholder="Enter your password" class="rounded-[1em] border-[#C0B7E8]/10 bg-[#302C42] text-[#E0E0E0] placeholder:text-[#B1B1B1] w-full p-3" />
+              <p id="password-error" class="text-red-400 text-sm hidden" role="alert"></p>
             </div>
 
             <div class="mt-6">
