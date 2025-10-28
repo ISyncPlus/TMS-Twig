@@ -10,93 +10,104 @@
   <link rel="stylesheet" href="/styles.css" />
     <style>
       /* Embedded React index.css + globals.css essentials for visual parity */
-      {% include '_react_css.css' %}
-      body { font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
-    </style>
-  </head>
-  <body class="bg-[#302C42] text-[#E0E0E0]">
-  <!-- Toast container -->
-  <div id="toast-container" class="fixed top-6 right-6 z-50 flex flex-col gap-2"></div>
-    <header class="px-6 py-4">
-      <div class="mx-auto max-w-6xl flex items-center justify-between">
-        <a href="/" class="text-2xl font-semibold gradient-text">TicketWave</a>
-        <nav class="space-x-4">
-          <a href="/login" class="text-[#C0B7E8]">Log in</a>
-          <a href="/signup" class="text-[#C0B7E8]">Sign up</a>
-          <script>
-            // Simple toast implementation (success / error) to mimic React sonner
-            (function(){
-              const container = document.getElementById('toast-container');
-              function createToast(type, msg) {
-                const el = document.createElement('div');
-                el.className = 'max-w-sm px-4 py-3 rounded-md shadow-lg text-sm';
-                el.style.transition = 'opacity 240ms ease, transform 240ms ease';
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(-6px)';
-                if (type === 'success') {
-                  el.classList.add('bg-green-600', 'text-white');
-                } else {
-                  el.classList.add('bg-red-600', 'text-white');
-                }
-                el.textContent = msg;
-                container.prepend(el);
-                // animate in
-                requestAnimationFrame(() => {
-                  el.style.opacity = '1';
-                  el.style.transform = 'translateY(0)';
-                });
-                setTimeout(() => {
-                  // animate out
-                  el.style.opacity = '0';
-                  el.style.transform = 'translateY(-6px)';
-                  setTimeout(() => el.remove(), 300);
-                }, 3500);
               }
-              window.toast = {
-                success: (m) => createToast('success', m),
-                error: (m) => createToast('error', m),
-              };
 
 
-              // Auth helpers: try server endpoints first (/api/login, /api/signup). If server is not available, fall back to localStorage (demo mode).
-              const USERS_KEY = 'ticketapp_users';
-              const SESSION_KEY = 'ticketapp_session';
+              // Expose for debugging (optional)
+              window.__tmsAuth = { signupClient, loginClient, readUsers };
 
-              function readUsers(){
-                try { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); } catch(e){ return []; }
-              }
-              function writeUsers(users){ localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
+              // Attach form handlers when DOM ready
+              document.addEventListener('DOMContentLoaded', () => {
+                // Login form
+                const loginForm = document.querySelector('form[action="/login"]');
+                if (loginForm) {
+                  loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const form = e.currentTarget;
+                    const email = (form.querySelector('input[name="email"]')||{}).value?.trim() || '';
+                    const password = (form.querySelector('input[name="password"]')||{}).value || '';
+                    let hasError = false;
+                    // simple validation
+                    const emailErrEl = document.getElementById('email-error');
+                    const passErrEl = document.getElementById('password-error');
+                    if (emailErrEl) { emailErrEl.textContent = ''; emailErrEl.classList.add('hidden'); }
+                    if (passErrEl) { passErrEl.textContent = ''; passErrEl.classList.add('hidden'); }
+                    if (!email) { if (emailErrEl) { emailErrEl.textContent = 'Email is required'; emailErrEl.classList.remove('hidden'); } hasError = true; }
+                    else if (!/\S+@\S+\.\S+/.test(email)) { if (emailErrEl) { emailErrEl.textContent = 'Email is invalid'; emailErrEl.classList.remove('hidden'); } hasError = true; }
+                    if (!password) { if (passErrEl) { passErrEl.textContent = 'Password is required'; passErrEl.classList.remove('hidden'); } hasError = true; }
+                    else if (password.length < 6) { if (passErrEl) { passErrEl.textContent = 'Password must be at least 6 characters'; passErrEl.classList.remove('hidden'); } hasError = true; }
+                    if (hasError) { window.toast.error('Please fix the form errors'); return; }
+                    loginClient(email, password).then(res => {
+                      if (!res.ok) { window.toast.error('Invalid email or password'); return; }
+                      window.toast.success('Successfully logged in!');
+                      // small delay so toast is visible then navigate
+                      setTimeout(() => { window.location.href = '/dashboard'; }, 350);
+                    });
+                  });
 
-              async function signupClient(email, password, name){
-                // try server API
-                try {
-                  const res = await fetch('/api/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password, name }) });
-                  if (res.ok) {
-                    const json = await res.json();
-                    if (json.ok) {
-                      localStorage.setItem(SESSION_KEY, JSON.stringify({ user: json.user, isAuthenticated: true }));
-                      return { ok: true, user: json.user };
-                    }
-                    return { ok: false, reason: json.reason };
-                  }
-                } catch (e) {
-                  // server not reachable, fallback below
+                  // Enhance visuals: ticket-badge hover/idle animation using Web Animations API
+                  const badges = document.querySelectorAll('.ticket-badge');
+                  badges.forEach(b => {
+                    // subtle idle scale pulse
+                    try {
+                      b.animate([
+                        { transform: 'scale(1)' },
+                        { transform: 'scale(1.05)' },
+                        { transform: 'scale(1)' }
+                      ], { duration: 6000, iterations: Infinity, easing: 'ease-in-out' });
+                    } catch (e) {}
+
+                    // rotate on hover (non-blocking)
+                    b.addEventListener('mouseenter', () => {
+                      try { b.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 800, easing: 'cubic-bezier(.17,.67,.35,1)' }); } catch(e) {}
+                    });
+                  });
                 }
 
-                // fallback: client-side storage
-                const users = readUsers();
-                if (users.find(u => u.email === email)) return { ok: false, reason: 'exists' };
-                const id = Math.random().toString(36).substring(2,11);
-                const newUser = { id, email, password, name };
-                users.push(newUser);
-                writeUsers(users);
-                localStorage.setItem(SESSION_KEY, JSON.stringify({ user: { id, email, name }, isAuthenticated: true }));
-                return { ok: true, user: newUser };
-              }
+                // Signup form
+                const signupForm = document.querySelector('form[action="/signup"]');
+                if (signupForm) {
+                  signupForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const form = e.currentTarget;
+                    const name = (form.querySelector('input[name="name"]')||{}).value?.trim() || '';
+                    const email = (form.querySelector('input[name="email"]')||{}).value?.trim() || '';
+                    const password = (form.querySelector('input[name="password"]')||{}).value || '';
+                    const confirm = (form.querySelector('input[name="confirmPassword"]')||{}).value || '';
+                    let hasError = false;
+                    const nameErr = document.getElementById('name-error');
+                    const emailErr = document.getElementById('email-error');
+                    const passErr = document.getElementById('password-error');
+                    const confErr = document.getElementById('confirmPassword-error');
+                    [nameErr,emailErr,passErr,confErr].forEach(n=>{ if(n){ n.textContent=''; n.classList.add('hidden'); }});
+                    if (!name) { if (nameErr){ nameErr.textContent='Name is required'; nameErr.classList.remove('hidden'); } hasError = true; }
+                    if (!email) { if (emailErr){ emailErr.textContent='Email is required'; emailErr.classList.remove('hidden'); } hasError = true; }
+                    else if (!/\S+@\S+\.\S+/.test(email)) { if (emailErr){ emailErr.textContent='Email is invalid'; emailErr.classList.remove('hidden'); } hasError = true; }
+                    if (!password) { if (passErr){ passErr.textContent='Password is required'; passErr.classList.remove('hidden'); } hasError = true; }
+                    else if (password.length < 6) { if (passErr){ passErr.textContent='Password must be at least 6 characters'; passErr.classList.remove('hidden'); } hasError = true; }
+                    if (password !== confirm) { if (confErr){ confErr.textContent='Passwords do not match'; confErr.classList.remove('hidden'); } hasError = true; }
+                    if (hasError) { window.toast.error('Please fix the form errors'); return; }
+                    signupClient(email, password, name).then(res => {
+                      if (!res.ok) { window.toast.error('An account with that email already exists'); return; }
+                      window.toast.success('Account created successfully!');
+                      setTimeout(() => { window.location.href = '/dashboard'; }, 350);
+                    });
+                  });
+                }
+              });
+            })();
+          </script>
 
-              async function loginClient(email, password){
-                try {
-                  const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+  </body>
+</html>
                   if (res.ok) {
                     const json = await res.json();
                     if (json.ok) {
