@@ -21,8 +21,8 @@ COPY composer.json composer.lock* ./
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Copy app files
-COPY public/ .
+# Copy app files (preserve `public/` directory so runtime can serve it)
+COPY public/ public/
 COPY templates/ ./templates/
 COPY bin/ ./bin/
 
